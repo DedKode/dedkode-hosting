@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DedKode: Kill Chain</title>
+    <style>
+        body {
+            background-color: black;
+            color: lime;
+            font-family: monospace;
+            text-align: center;
+        }
+        textarea {
+            width: 80%;
+            height: 400px;
+            background: black;
+            color: lime;
+            font-family: monospace;
+            border: 2px solid lime;
+            padding: 10px;
+        }
+        button {
+            background: lime;
+            color: black;
+            font-size: 16px;
+            padding: 10px;
+            border: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>DedKode: Kill Chain</h1>
+    <textarea id="terminal" readonly></textarea>
+    <br>
+    <button onclick="startGame()">Start Game</button>
+    
+    <script>
+        function printToTerminal(text) {
+            let terminal = document.getElementById("terminal");
+            terminal.value += text + "\n";
+            terminal.scrollTop = terminal.scrollHeight;
+        }
+
+        function drawBanner(text) {
+            let line = "=".repeat(text.length);
+            printToTerminal(line);
+            printToTerminal(text);
+            printToTerminal(line);
+        }
+
+        function startGame() {
+            drawBanner("DEDKODE: KILL CHAIN");
+            printToTerminal("Welcome to DedKode: Kill Chain!");
+            setTimeout(() => {
+                printToTerminal("The system is unstable... Something big is coming.");
+            }, 2000);
+        }
+    </script>
+</body>
+</html>
