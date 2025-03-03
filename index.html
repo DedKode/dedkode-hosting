@@ -27,6 +27,7 @@
             padding: 10px;
             border: none;
             cursor: pointer;
+            margin: 5px;
         }
     </style>
 </head>
@@ -34,7 +35,12 @@
     <h1>DedKode: Kill Chain</h1>
     <textarea id="terminal" readonly></textarea>
     <br>
-    <button onclick="startGame()">Start Game</button>
+    <button id="startButton" onclick="startGame()">Start Game</button>
+    <div id="choices" style="display:none;">
+        <button onclick="playerChoice('trace')">Trace the Signal</button>
+        <button onclick="playerChoice('brute')">Brute Force Access</button>
+        <button onclick="playerChoice('ghost')">Go Ghost Mode</button>
+    </div>
     
     <script>
         function printToTerminal(text) {
@@ -54,8 +60,32 @@
             drawBanner("DEDKODE: KILL CHAIN");
             printToTerminal("Welcome to DedKode: Kill Chain!");
             setTimeout(() => {
-                printToTerminal("The system is unstable... Something big is coming.");
+                printToTerminal("Incoming transmission...\n");
+                printToTerminal("[DedKode]: \"The system is unstable... Something big is coming.\"\n");
+                printToTerminal("[DedKode]: \"You have a choice. What's your move?\"");
+                document.getElementById("startButton").style.display = "none";
+                document.getElementById("choices").style.display = "block";
             }, 2000);
+        }
+
+        function playerChoice(option) {
+            document.getElementById("choices").style.display = "none";
+            if (option === 'trace') {
+                printToTerminal("[You]: Initiating trace... Tracking source.");
+                setTimeout(() => {
+                    printToTerminal("[DedKode]: \"Clever. But is it fast enough?\"");
+                }, 2000);
+            } else if (option === 'brute') {
+                printToTerminal("[You]: Deploying brute force attack...");
+                setTimeout(() => {
+                    printToTerminal("[DedKode]: \"Loud and messy. Hope you're ready for the fallout.\"");
+                }, 2000);
+            } else if (option === 'ghost') {
+                printToTerminal("[You]: Engaging Ghost Mode. Going silent.");
+                setTimeout(() => {
+                    printToTerminal("[DedKode]: \"Smart. But stealth comes at a cost.\"");
+                }, 2000);
+            }
         }
     </script>
 </body>
