@@ -19,6 +19,7 @@
             font-family: monospace;
             border: 2px solid lime;
             padding: 10px;
+            overflow-y: scroll;
         }
         button {
             background: lime;
@@ -29,10 +30,18 @@
             cursor: pointer;
             margin: 5px;
         }
+        .glitch {
+            color: red;
+            animation: glitch 0.1s infinite alternate;
+        }
+        @keyframes glitch {
+            0% { text-shadow: 2px 2px red; }
+            100% { text-shadow: -2px -2px red; }
+        }
     </style>
 </head>
 <body>
-    <h1>DedKode: Kill Chain</h1>
+    <h1 class="glitch">DEDKODE: KILL CHAIN</h1>
     <textarea id="terminal" readonly></textarea>
     <br>
     <button id="startButton" onclick="startGame()">Start Game</button>
@@ -43,9 +52,9 @@
     </div>
     
     <script>
-        function printToTerminal(text) {
+        function printToTerminal(text, isGlitch = false) {
             let terminal = document.getElementById("terminal");
-            terminal.value += text + "\n";
+            terminal.value += (isGlitch ? "[ERROR] " : "") + text + "\n";
             terminal.scrollTop = terminal.scrollHeight;
         }
 
@@ -58,14 +67,13 @@
 
         function startGame() {
             drawBanner("DEDKODE: KILL CHAIN");
-            printToTerminal("Welcome to DedKode: Kill Chain!");
+            printToTerminal("Initializing...", true);
             setTimeout(() => {
-                printToTerminal("Incoming transmission...\n");
-                printToTerminal("[DedKode]: \"The system is unstable... Something big is coming.\"\n");
-                printToTerminal("[DedKode]: \"You have a choice. What's your move?\"");
+                printToTerminal("\n[DedKode]: \"You hearing this static? Something's listening...\"");
+                printToTerminal("[DedKode]: \"No turning back now. Pick your move, fast.\"");
                 document.getElementById("startButton").style.display = "none";
                 document.getElementById("choices").style.display = "block";
-            }, 2000);
+            }, 3000);
         }
 
         function playerChoice(option) {
@@ -73,19 +81,32 @@
             if (option === 'trace') {
                 printToTerminal("[You]: Initiating trace... Tracking source.");
                 setTimeout(() => {
-                    printToTerminal("[DedKode]: \"Clever. But is it fast enough?\"");
+                    printToTerminal("[DedKode]: \"Clever. But Spectre moves faster...\"");
+                    triggerSpectreGlitch();
                 }, 2000);
             } else if (option === 'brute') {
                 printToTerminal("[You]: Deploying brute force attack...");
                 setTimeout(() => {
-                    printToTerminal("[DedKode]: \"Loud and messy. Hope you're ready for the fallout.\"");
+                    printToTerminal("[DedKode]: \"Loud. Reckless. I like it. Hope you can handle Spectre's response.\"");
+                    triggerSpectreGlitch();
                 }, 2000);
             } else if (option === 'ghost') {
                 printToTerminal("[You]: Engaging Ghost Mode. Going silent.");
                 setTimeout(() => {
-                    printToTerminal("[DedKode]: \"Smart. But stealth comes at a cost.\"");
+                    printToTerminal("[DedKode]: \"Yo smart. But 0Spectre is watching. Asshole always is.\"");
+                    triggerSpectreGlitch();
                 }, 2000);
             }
+        }
+
+        function triggerSpectreGlitch() {
+            setTimeout(() => {
+                printToTerminal("[0Sp3ctr3]: \"D3dK0d3, y0u c4n't h1d3 f0r3v3r...\"", true);
+                document.body.style.backgroundColor = "red";
+                setTimeout(() => {
+                    document.body.style.backgroundColor = "black";
+                }, 500);
+            }, 3000);
         }
     </script>
 </body>
