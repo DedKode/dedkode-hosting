@@ -10,6 +10,7 @@
             color: lime;
             font-family: monospace;
             text-align: center;
+            transition: background-color 0.2s ease-in-out;
         }
         textarea {
             width: 80%;
@@ -35,8 +36,23 @@
             animation: glitch 0.1s infinite alternate;
         }
         @keyframes glitch {
-            0% { text-shadow: 2px 2px red; }
-            100% { text-shadow: -2px -2px red; }
+            0% { text-shadow: 2px 2px red; transform: translate(1px, 1px); }
+            100% { text-shadow: -2px -2px red; transform: translate(-1px, -1px); }
+        }
+        #jumpscare {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: black;
+            z-index: 9999;
+        }
+        #jumpscare img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
     </style>
 </head>
@@ -49,6 +65,11 @@
         <button onclick="playerChoice('trace')">Trace the Signal</button>
         <button onclick="playerChoice('brute')">Brute Force Access</button>
         <button onclick="playerChoice('ghost')">Go Ghost Mode</button>
+    </div>
+    
+    <div id="jumpscare">
+        <img src="jumpscare.png" alt="Scary face" />
+        <audio id="jumpscareSound" src="jumpscare.mp3"></audio>
     </div>
     
     <script>
@@ -93,7 +114,7 @@
             } else if (option === 'ghost') {
                 printToTerminal("[You]: Engaging Ghost Mode. Going silent.");
                 setTimeout(() => {
-                    printToTerminal("[DedKode]: \"Yo smart. But 0Spectre is watching. Asshole always is.\"");
+                    printToTerminal("[DedKode]: \"Smart. But Spectre is watching. It always is.\"");
                     triggerSpectreGlitch();
                 }, 2000);
             }
@@ -103,10 +124,29 @@
             setTimeout(() => {
                 printToTerminal("[0Sp3ctr3]: \"D3dK0d3, y0u c4n't h1d3 f0r3v3r...\"", true);
                 document.body.style.backgroundColor = "red";
+                document.body.classList.add("glitch");
                 setTimeout(() => {
                     document.body.style.backgroundColor = "black";
-                }, 500);
+                    document.body.classList.remove("glitch");
+                    triggerJumpScare();
+                }, 1500);
             }, 3000);
+        }
+
+        function triggerJumpScare() {
+            let scare = document.getElementById("jumpscare");
+            let sound = document.getElementById("jumpscareSound");
+            scare.style.display = "block";
+            sound.play();
+            setTimeout(() => {
+                scare.style.display = "none";
+                allowNextMove();
+            }, 1000);
+        }
+
+        function allowNextMove() {
+            printToTerminal("[DedKode]: \"You still breathing? Then move—Spectre isn't done yet.\"");
+            document.getElementById("choices").style.display = "block";
         }
     </script>
 </body>
