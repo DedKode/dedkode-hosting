@@ -66,6 +66,11 @@
         <button onclick="playerChoice('brute')">Brute Force Access</button>
         <button onclick="playerChoice('ghost')">Go Ghost Mode</button>
     </div>
+    <div id="puzzle" style="display:none;">
+        <p>Enter the security override code:</p>
+        <input type="text" id="puzzleInput" />
+        <button onclick="checkPuzzle()">Submit</button>
+    </div>
     
     <div id="jumpscare">
         <img src="jumpscare.png" alt="Scary face" />
@@ -109,7 +114,7 @@
                 printToTerminal("[You]: Deploying brute force attack...");
                 setTimeout(() => {
                     printToTerminal("[DedKode]: \"Loud. Reckless. I like it. Hope you can handle Spectre's response.\"");
-                    triggerSpectreGlitch();
+                    showPuzzle();
                 }, 2000);
             } else if (option === 'ghost') {
                 printToTerminal("[You]: Engaging Ghost Mode. Going silent.");
@@ -144,9 +149,19 @@
             }, 1000);
         }
 
-        function allowNextMove() {
-            printToTerminal("[DedKode]: \"You still breathing? Then move—Spectre isn't done yet.\"");
-            document.getElementById("choices").style.display = "block";
+        function showPuzzle() {
+            document.getElementById("puzzle").style.display = "block";
+            printToTerminal("[DedKode]: \"Alright, hotshot. Crack the security override.\"");
+        }
+
+        function checkPuzzle() {
+            let input = document.getElementById("puzzleInput").value;
+            if (input === "1337") {
+                printToTerminal("[DedKode]: \"Nice work. We're in.\"");
+                document.getElementById("puzzle").style.display = "none";
+            } else {
+                printToTerminal("[DedKode]: \"Wrong. Try again, or we're toast.\"", true);
+            }
         }
     </script>
 </body>
