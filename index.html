@@ -153,11 +153,14 @@
         }
 
         function allowNextMove() {
+    console.log("allowNextMove() triggered");
     if (playerHealth > 0) {
         document.getElementById("choices").style.display = "block";
         document.querySelectorAll("#choices button").forEach(button => {
             button.disabled = false;
         });
+    }
+});
     }
 }
         }
