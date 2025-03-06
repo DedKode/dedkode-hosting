@@ -153,9 +153,13 @@
         }
 
         function allowNextMove() {
-            if (playerHealth > 0) {
-                document.getElementById("choices").style.display = "block";
-            }
+    if (playerHealth > 0) {
+        document.getElementById("choices").style.display = "block";
+        document.querySelectorAll("#choices button").forEach(button => {
+            button.disabled = false;
+        });
+    }
+}
         }
     </script>
 </body>
