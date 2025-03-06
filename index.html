@@ -58,7 +58,7 @@
 </head>
 <body>
     <h1 class="glitch">DEDKODE: KILL CHAIN</h1>
-    <p>Health: <span id="health">3</span></p>
+    <p style="font-size: 24px; font-weight: bold;">Health: <span id="health">3</span></p>
     <textarea id="terminal" readonly></textarea>
     <br>
     <button id="startButton" onclick="startGame()">Start Game</button>
@@ -150,6 +150,12 @@
                     triggerRandomJumpScare();
                 }, 1500);
             }, 3000);
+        }
+
+        function allowNextMove() {
+            if (playerHealth > 0) {
+                document.getElementById("choices").style.display = "block";
+            }
         }
     </script>
 </body>
