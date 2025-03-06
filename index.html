@@ -39,7 +39,7 @@
             0% { text-shadow: 2px 2px red; transform: translate(1px, 1px); }
             100% { text-shadow: -2px -2px red; transform: translate(-1px, -1px); }
         }
-        #jumpscare {
+        .jumpscare {
             display: none;
             position: fixed;
             top: 0;
@@ -49,7 +49,7 @@
             background: black;
             z-index: 9999;
         }
-        #jumpscare img {
+        .jumpscare img {
             width: 100%;
             height: 100%;
             object-fit: cover;
@@ -58,6 +58,7 @@
 </head>
 <body>
     <h1 class="glitch">DEDKODE: KILL CHAIN</h1>
+    <p>Health: <span id="health">3</span></p>
     <textarea id="terminal" readonly></textarea>
     <br>
     <button id="startButton" onclick="startGame()">Start Game</button>
@@ -72,12 +73,32 @@
         <button onclick="checkPuzzle()">Submit</button>
     </div>
     
-    <div id="jumpscare">
+    <div class="jumpscare" id="jumpscare1">
         <img src="jumpscare.png" alt="Scary face" />
-        <audio id="jumpscareSound" src="jumpscare.mp3"></audio>
+        <audio id="jumpscareSound1" src="jumpscare.mp3"></audio>
+    </div>
+    <div class="jumpscare" id="jumpscare2">
+        <img src="jumpscare2.png" alt="Scary face 2" />
+        <audio id="jumpscareSound2" src="jumpsound2.mp3"></audio>
+    </div>
+    <div class="jumpscare" id="jumpscare3">
+        <img src="jumpscare3.png" alt="Scary face 3" />
+        <audio id="jumpscareSound3" src="jumpsound3.mp3"></audio>
     </div>
     
     <script>
+        let playerHealth = 3;
+
+        function updateHealth() {
+            document.getElementById("health").textContent = playerHealth;
+            if (playerHealth <= 0) {
+                printToTerminal("[0Sp3ctr3]: \"Y0u b3l0ng t0 m3 n0w...\"", true);
+                setTimeout(() => {
+                    document.body.innerHTML = "<h1 class='glitch'>GAME OVER</h1><p>You have been claimed by 0Sp3ctr3.</p>";
+                }, 2000);
+            }
+        }
+
         function printToTerminal(text, isGlitch = false) {
             let terminal = document.getElementById("terminal");
             terminal.value += (isGlitch ? "[ERROR] " : "") + text + "\n";
@@ -92,6 +113,8 @@
         }
 
         function startGame() {
+            playerHealth = 3;
+            updateHealth();
             drawBanner("DEDKODE: KILL CHAIN");
             printToTerminal("Initializing...", true);
             setTimeout(() => {
@@ -102,27 +125,18 @@
             }, 3000);
         }
 
-        function playerChoice(option) {
-            document.getElementById("choices").style.display = "none";
-            if (option === 'trace') {
-                printToTerminal("[You]: Initiating trace... Tracking source.");
-                setTimeout(() => {
-                    printToTerminal("[DedKode]: \"Clever. But Spectre moves faster...\"");
-                    triggerSpectreGlitch();
-                }, 2000);
-            } else if (option === 'brute') {
-                printToTerminal("[You]: Deploying brute force attack...");
-                setTimeout(() => {
-                    printToTerminal("[DedKode]: \"Loud. Reckless. I like it. Hope you can handle Spectre's response.\"");
-                    showPuzzle();
-                }, 2000);
-            } else if (option === 'ghost') {
-                printToTerminal("[You]: Engaging Ghost Mode. Going silent.");
-                setTimeout(() => {
-                    printToTerminal("[DedKode]: \"Smart. But Spectre is watching. It always is.\"");
-                    triggerSpectreGlitch();
-                }, 2000);
-            }
+        function triggerRandomJumpScare() {
+            let scareId = Math.floor(Math.random() * 3) + 1;
+            let scare = document.getElementById(`jumpscare${scareId}`);
+            let sound = document.getElementById(`jumpscareSound${scareId}`);
+            scare.style.display = "block";
+            sound.play();
+            setTimeout(() => {
+                scare.style.display = "none";
+                playerHealth--;
+                updateHealth();
+                allowNextMove();
+            }, 1000);
         }
 
         function triggerSpectreGlitch() {
@@ -133,35 +147,9 @@
                 setTimeout(() => {
                     document.body.style.backgroundColor = "black";
                     document.body.classList.remove("glitch");
-                    triggerJumpScare();
+                    triggerRandomJumpScare();
                 }, 1500);
             }, 3000);
-        }
-
-        function triggerJumpScare() {
-            let scare = document.getElementById("jumpscare");
-            let sound = document.getElementById("jumpscareSound");
-            scare.style.display = "block";
-            sound.play();
-            setTimeout(() => {
-                scare.style.display = "none";
-                allowNextMove();
-            }, 1000);
-        }
-
-        function showPuzzle() {
-            document.getElementById("puzzle").style.display = "block";
-            printToTerminal("[DedKode]: \"Alright, hotshot. Crack the security override.\"");
-        }
-
-        function checkPuzzle() {
-            let input = document.getElementById("puzzleInput").value;
-            if (input === "1337") {
-                printToTerminal("[DedKode]: \"Nice work. We're in.\"");
-                document.getElementById("puzzle").style.display = "none";
-            } else {
-                printToTerminal("[DedKode]: \"Wrong. Try again, or we're toast.\"", true);
-            }
         }
     </script>
 </body>
