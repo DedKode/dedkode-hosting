@@ -119,52 +119,20 @@
             printToTerminal("Initializing...", true);
             setTimeout(() => {
                 printToTerminal("\n[DedKode]: \"Yo, You hearing this static? Some ass hat's listening...\"");
-                printToTerminal("[DedKode]: \"No turning back now. Pick your move, fast, bruh.\"");
+                printToTerminal("[DedKode]: \"No turning back now. Pick your move, fast, bruh."\"");
                 document.getElementById("startButton").style.display = "none";
                 document.getElementById("choices").style.display = "block";
             }, 3000);
         }
 
-        function triggerRandomJumpScare() {
-            let scareId = Math.floor(Math.random() * 3) + 1;
-            let scare = document.getElementById(`jumpscare${scareId}`);
-            let sound = document.getElementById(`jumpscareSound${scareId}`);
-            scare.style.display = "block";
-            sound.play();
-            setTimeout(() => {
-                scare.style.display = "none";
-                playerHealth--;
-                updateHealth();
-                allowNextMove();
-            }, 1000);
-        }
-
-        function triggerSpectreGlitch() {
-            setTimeout(() => {
-                printToTerminal("[0Sp3ctr3]: \"D3dK0d3, y0u c4n't h1d3 f0r3v3r...\"", true);
-                document.body.style.backgroundColor = "red";
-                document.body.classList.add("glitch");
-                setTimeout(() => {
-                    document.body.style.backgroundColor = "black";
-                    document.body.classList.remove("glitch");
-                    triggerRandomJumpScare();
-                }, 1500);
-            }, 3000);
-        }
-
         function allowNextMove() {
-    console.log("allowNextMove() triggered");
-    if (playerHealth > 0) {
-        document.getElementById("choices").style.display = "block";
-        document.querySelectorAll("#choices button").forEach(button => {
-            button.disabled = false;
-        });
-    }
-});
-    }
-});
-    }
-}
+            console.log("allowNextMove() triggered");
+            if (playerHealth > 0) {
+                document.getElementById("choices").style.display = "block";
+                document.querySelectorAll("#choices button").forEach(button => {
+                    button.disabled = false;
+                });
+            }
         }
     </script>
 </body>
