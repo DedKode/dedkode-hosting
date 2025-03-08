@@ -57,7 +57,7 @@
     </style>
 </head>
 <body>
-    <h1 class="glitch">DEDKODE: KILL CHAIN V.1.4</h1>
+    <h1 class="glitch">DEDKODE: KILL CHAIN V.1.5</h1>
     <p style="font-size: 24px; font-weight: bold;">Health: <span id="health">3</span></p>
     <textarea id="terminal" readonly></textarea>
     <br>
@@ -148,6 +148,32 @@
                 }
                 triggerSpectreGlitch();
             }, 2000);
+        }
+            function triggerSpectreGlitch() {
+            setTimeout(() => {
+                printToTerminal("[0Sp3ctr3]: \"D3dK0d3, y0u c4n't h1d3 f0r3v3r...\"", true);
+                document.body.style.backgroundColor = "red";
+                document.body.classList.add("glitch");
+                setTimeout(() => {
+                    document.body.style.backgroundColor = "black";
+                    document.body.classList.remove("glitch");
+                    triggerRandomJumpScare();
+                }, 1500);
+            }, 3000);
+        }
+
+        function triggerRandomJumpScare() {
+            let scareId = Math.floor(Math.random() * 3) + 1;
+            let scare = document.getElementById(`jumpscare${scareId}`);
+            let sound = document.getElementById(`jumpscareSound${scareId}`);
+            scare.style.display = "block";
+            sound.play();
+            setTimeout(() => {
+                scare.style.display = "none";
+                playerHealth--;
+                updateHealth();
+                allowNextMove();
+            }, 1000);
         }
     </script>
 </body>
