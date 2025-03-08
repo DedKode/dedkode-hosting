@@ -57,7 +57,7 @@
     </style>
 </head>
 <body>
-    <h1 class="glitch">DEDKODE: KILL CHAIN V.1</h1>
+    <h1 class="glitch">DEDKODE: KILL CHAIN V.1.2</h1>
     <p style="font-size: 24px; font-weight: bold;">Health: <span id="health">3</span></p>
     <textarea id="terminal" readonly></textarea>
     <br>
@@ -113,6 +113,7 @@
         }
 
         function startGame() {
+    console.log("startGame() triggered");
             playerHealth = 3;
             updateHealth();
             drawBanner("DEDKODE: KILL CHAIN");
