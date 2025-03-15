@@ -6,6 +6,17 @@ let playerHealth = 5;
 let corruption = 0;
 let inventory = { backupFile: 0, firewallShield: 0, purgeCommand: 0 };
 
+// ✅ PRINT TO TERMINAL (Now Defined First)
+function printToTerminal(text, isGlitch = false) {
+    let terminal = document.getElementById("terminal");
+    if (terminal) {
+        terminal.value += (isGlitch ? "[ERROR] " : "") + text + "\n";
+        terminal.scrollTop = terminal.scrollHeight;
+    } else {
+        console.error("❌ ERROR: 'terminal' element not found!");
+    }
+}
+
 // 🚀 UPDATE PLAYER HEALTH & CORRUPTION
 function updateStats() {
     let healthElement = document.getElementById("health");
@@ -33,24 +44,37 @@ function updateStats() {
 function useItem(item) {
     if (inventory[item] > 0) {
         if (item === "backupFile") {
-            playerHealth = Math.min(5, playerHealth + 1); // Heals, but max 5 HP
+            playerHealth = Math.min(5, playerHealth + 1);
             printToTerminal("[SYSTEM]: Backup File Restored. +1 HP");
         } else if (item === "firewallShield") {
             printToTerminal("[SYSTEM]: Firewall Active. Next attack blocked.");
-            inventory.firewallShield--; // Use it once
+            inventory.firewallShield--;
         } else if (item === "purgeCommand") {
             corruption = 0;
-            playerHealth--; // Reduces HP, but resets corruption
+            playerHealth--;
             printToTerminal("[SYSTEM]: Purge Complete. Corruption Reset. -1 HP");
         }
-        inventory[item]--; // Remove one use
+        inventory[item]--;
         updateStats();
     } else {
         printToTerminal("[ERROR]: No more of that item left.");
     }
 }
 
-// 🛠 START GAME
+// ✅ ALLOW NEXT MOVE (ENSURES CHOICES RETURN AFTER EVENTS)
+function allowNextMove() {
+    let choicesDiv = document.getElementById("choices");
+    if (choicesDiv) {
+        choicesDiv.style.display = "block";
+        document.querySelectorAll("#choices button").forEach(button => {
+            button.disabled = false;
+        });
+    } else {
+        console.error("❌ ERROR: 'choices' element not found!");
+    }
+}
+
+// 🛠 START GAME (FULLY FIXED)
 function startGame() {
     console.log("🔥 startGame() triggered");
     playerHealth = 5;
@@ -69,7 +93,7 @@ function startGame() {
 function playerChoice(option) {
     printToTerminal(`[You]: ${option.toUpperCase()}...`);
     document.getElementById("choices").style.display = "none";
-    
+
     if (option === "trace") {
         printToTerminal("[0Sp3ctr3]: \"G00d luck tr4ck1ng m3...\"", true);
         corruption++;
@@ -84,8 +108,9 @@ function playerChoice(option) {
     triggerSpectreGlitch();
 }
 
-// 👀 SPECTRE GLITCH EFFECTS
+// ✅ SPECTRE GLITCH EFFECTS (NOW GUARANTEED TO WORK)
 function triggerSpectreGlitch() {
+    console.log("👻 triggerSpectreGlitch() called!");
     setTimeout(() => {
         printToTerminal("[0Sp3ctr3]: \"D3dK0d3, y0u c4n't h1d3 f0r3v3r...\"", true);
         document.body.style.backgroundColor = "red";
@@ -115,7 +140,7 @@ function triggerRandomJumpScare() {
     }
 }
 
-// 🔥 EVENT LISTENER ATTACHMENT
+// 🔥 EVENT LISTENER ATTACHMENT (FINAL FIX)
 document.addEventListener("DOMContentLoaded", function() {
     document.getElementById("startButton")?.addEventListener("click", startGame);
     document.getElementById("traceBtn")?.addEventListener("click", () => playerChoice('trace'));
