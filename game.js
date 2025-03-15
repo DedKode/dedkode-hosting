@@ -129,3 +129,12 @@ document.getElementById("puzzleInput").addEventListener("input", function(event)
         event.target.value = ["I SEE YOU", "STOP TRYING", "YOU ARE MINE"][Math.floor(Math.random() * 3)];
     }
 });
+
+// Wait for the DOM to fully load before adding event listeners
+document.addEventListener("DOMContentLoaded", () => {
+    document.getElementById("startButton").addEventListener("click", startGame);
+    document.getElementById("traceBtn").addEventListener("click", () => playerChoice('trace'));
+    document.getElementById("bruteBtn").addEventListener("click", () => playerChoice('brute'));
+    document.getElementById("ghostBtn").addEventListener("click", () => playerChoice('ghost'));
+    document.getElementById("puzzleSubmit").addEventListener("click", checkPuzzle);
+});
