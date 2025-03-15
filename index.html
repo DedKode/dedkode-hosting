@@ -57,89 +57,37 @@
     </style>
 </head>
 <body>
-    <h1 class="glitch">DEDKODE: KILL CHAIN V.1.7.1</h1>
+    <h1 class="glitch">DEDKODE: KILL CHAIN V.2</h1>
     <p style="font-size: 24px; font-weight: bold;">Health: <span id="health">3</span></p>
     <textarea id="terminal" readonly></textarea>
     <br>
-    <button id="startButton" onclick="startGame()">Start Game</button>
+    <button id="startButton">Start Game</button>
     <div id="choices" style="display:none;">
-        <button onclick="playerChoice('trace')">Trace the Signal</button>
-        <button onclick="playerChoice('brute')">Brute Force Access</button>
-        <button onclick="playerChoice('ghost')">Go Ghost Mode</button>
+        <button id="traceBtn">Trace the Signal</button>
+        <button id="bruteBtn">Brute Force Access</button>
+        <button id="ghostBtn">Go Ghost Mode</button>
     </div>
     <div id="puzzle" style="display:none;">
         <p>Enter the security override code:</p>
         <input type="text" id="puzzleInput" />
-        <button onclick="checkPuzzle()">Submit</button>
+        <button id="puzzleSubmit">Submit</button>
     </div>
     
+    <!-- Jumpscare Elements -->
     <div class="jumpscare" id="jumpscare1">
         <img src="jumpscare.png" alt="Scary face" />
         <audio id="jumpscareSound1" src="jumpscare.mp3"></audio>
     </div>
-    <script>
-        let playerHealth = 3;
+    <div class="jumpscare" id="jumpscare2">
+        <img src="jumpscare2.png" alt="Scary face 2" />
+        <audio id="jumpscareSound2" src="jumpsound2.mp3"></audio>
+    </div>
+    <div class="jumpscare" id="jumpscare3">
+        <img src="jumpscare3.png" alt="Scary face 3" />
+        <audio id="jumpscareSound3" src="jumpsound3.mp3"></audio>
+    </div>
 
-        function updateHealth() {
-            document.getElementById("health").textContent = playerHealth;
-            if (playerHealth <= 0) {
-                printToTerminal("[0Sp3ctr3]: \"Y0u b3l0ng t0 m3 n0w...\"", true);
-                setTimeout(() => {
-                    document.body.innerHTML = "<h1 class='glitch'>GAME OVER</h1><p>You have been claimed by 0Sp3ctr3.</p>";
-                }, 2000);
-            } else {
-                allowNextMove();
-            }
-        }
-
-        function printToTerminal(text, isGlitch = false) {
-            let terminal = document.getElementById("terminal");
-            terminal.value += (isGlitch ? "[ERROR] " : "") + text + "\n";
-            terminal.scrollTop = terminal.scrollHeight;
-        }
-
-        function startGame() {
-            playerHealth = 3;
-            updateHealth();
-            printToTerminal("[DedKode]: \"Yo, You hearing this static? Some ass hat's listening...\"");
-            document.getElementById("startButton").style.display = "none";
-            document.getElementById("choices").style.display = "block";
-        }
-
-        function playerChoice(option) {
-            printToTerminal(`[You]: ${option.toUpperCase()}...`);
-            document.getElementById("choices").style.display = "none";
-            triggerSpectreGlitch();
-        }
-
-        function triggerSpectreGlitch() {
-            setTimeout(() => {
-                printToTerminal("[0Sp3ctr3]: \"D3dK0d3, y0u c4n't h1d3 f0r3v3r...\"", true);
-                document.body.style.backgroundColor = "red";
-                document.body.classList.add("glitch");
-                setTimeout(() => {
-                    document.body.style.backgroundColor = "black";
-                    document.body.classList.remove("glitch");
-                    triggerRandomJumpScare();
-                }, 1500);
-            }, 3000);
-        }
-
-        function triggerRandomJumpScare() {
-            let scare = document.getElementById("jumpscare1");
-            let sound = document.getElementById("jumpscareSound1");
-            scare.style.display = "block";
-            sound.play();
-            setTimeout(() => {
-                scare.style.display = "none";
-                playerHealth--;
-                updateHealth();
-            }, 1000);
-        }
-
-        function allowNextMove() {
-            document.getElementById("choices").style.display = "block";
-        }
-    </script>
+    <!-- Game Script -->
+    <script src="game.js"></script>
 </body>
 </html>
