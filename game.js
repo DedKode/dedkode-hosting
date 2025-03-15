@@ -77,7 +77,43 @@ function playerChoice(option) {
     let trueChoice = Math.random() > 0.3 ? option : (option === "trace" ? "brute" : "trace");
     printToTerminal(`[You]: ${trueChoice.toUpperCase()}...`);
     document.getElementById("choices").style.display = "none";
-    triggerSpectreGlitch();
+    triggerSpectreGlitch(); // ✅ This function now EXISTS BELOW!
+}
+
+// 👀 SPECTRE GLITCH EFFECTS (Now Defined!)
+function triggerSpectreGlitch() {
+    console.log("👻 triggerSpectreGlitch() called!");
+    setTimeout(() => {
+        printToTerminal("[0Sp3ctr3]: \"D3dK0d3, y0u c4n't h1d3 f0r3v3r...\"", true);
+        document.body.style.backgroundColor = "red";
+        document.body.classList.add("glitch");
+        setTimeout(() => {
+            document.body.style.backgroundColor = "black";
+            document.body.classList.remove("glitch");
+            triggerRandomJumpScare();
+        }, 1500);
+    }, 3000);
+}
+
+// 💀 RANDOM JUMPSCARE FUNCTION
+function triggerRandomJumpScare() {
+    let scareId = Math.floor(Math.random() * 3) + 1;
+    let scare = document.getElementById(`jumpscare${scareId}`);
+    let sound = document.getElementById(`jumpscareSound${scareId}`);
+
+    console.log("🎃 Triggering jumpscare:", scareId);
+    
+    if (scare && sound) {
+        scare.style.display = "block";
+        sound.play();
+        setTimeout(() => {
+            scare.style.display = "none";
+            playerHealth--;
+            updateHealth();
+        }, 1000);
+    } else {
+        console.error("❌ ERROR: Jumpscare elements not found!");
+    }
 }
 
 // 🔥 FORCE EVENT LISTENER ATTACHMENT
