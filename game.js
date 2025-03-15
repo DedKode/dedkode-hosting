@@ -1,3 +1,6 @@
+// ✅ Debugging message to ensure script is loading
+console.log("✅ game.js loaded successfully!");
+
 // GAME VARIABLES
 let playerHealth = 3;
 let idleTimer;
@@ -5,7 +8,13 @@ let clickCounts = { trace: 0, brute: 0, ghost: 0 };
 
 // 🚀 UPDATE PLAYER HEALTH
 function updateHealth() {
-    document.getElementById("health").textContent = playerHealth;
+    let healthElement = document.getElementById("health");
+    if (healthElement) {
+        healthElement.textContent = playerHealth;
+    } else {
+        console.error("❌ ERROR: 'health' element not found!");
+    }
+
     if (playerHealth <= 0) {
         printToTerminal("[0Sp3ctr3]: \"Y0u b3l0ng t0 m3 n0w...\"", true);
         setTimeout(() => {
@@ -16,20 +25,51 @@ function updateHealth() {
     }
 }
 
+// ✅ Added allowNextMove to prevent missing function error
+function allowNextMove() {
+    let choicesDiv = document.getElementById("choices");
+    if (choicesDiv) {
+        choicesDiv.style.display = "block";
+        document.querySelectorAll("#choices button").forEach(button => {
+            button.disabled = false; // Re-enable choices
+        });
+    } else {
+        console.error("❌ ERROR: 'choices' element not found!");
+    }
+}
+
 // 🖥 PRINT TO TERMINAL
 function printToTerminal(text, isGlitch = false) {
     let terminal = document.getElementById("terminal");
-    terminal.value += (isGlitch ? "[ERROR] " : "") + text + "\n";
-    terminal.scrollTop = terminal.scrollHeight;
+    if (terminal) {
+        terminal.value += (isGlitch ? "[ERROR] " : "") + text + "\n";
+        terminal.scrollTop = terminal.scrollHeight;
+    } else {
+        console.error("❌ ERROR: 'terminal' element not found!");
+    }
 }
 
 // 🛠 START GAME
 function startGame() {
+    console.log("🔥 startGame() triggered");
     playerHealth = 3;
     updateHealth();
     printToTerminal("[DedKode]: \"Yo, You hearing this static? Some ass hat's listening...\"");
-    document.getElementById("startButton").style.display = "none";
-    document.getElementById("choices").style.display = "block";
+
+    let startButton = document.getElementById("startButton");
+    let choicesDiv = document.getElementById("choices");
+
+    if (startButton) {
+        startButton.style.display = "none";
+    } else {
+        console.error("❌ ERROR: 'startButton' element not found!");
+    }
+
+    if (choicesDiv) {
+        choicesDiv.style.display = "block";
+    } else {
+        console.error("❌ ERROR: 'choices' element not found!");
+    }
 }
 
 // 🎭 PLAYER CHOICE (Spectre Can Reverse It)
@@ -40,19 +80,20 @@ function playerChoice(option) {
     triggerSpectreGlitch();
 }
 
-// Wait for the DOM to fully load before adding event listeners
+// 🔥 FORCE EVENT LISTENER ATTACHMENT
 document.addEventListener("DOMContentLoaded", function() {
+    console.log("🚀 DOM fully loaded");
+
     let startButton = document.getElementById("startButton");
     let traceBtn = document.getElementById("traceBtn");
     let bruteBtn = document.getElementById("bruteBtn");
     let ghostBtn = document.getElementById("ghostBtn");
-    let puzzleInput = document.getElementById("puzzleInput");
-    let puzzleSubmit = document.getElementById("puzzleSubmit");
 
     if (startButton) {
+        console.log("✅ startButton found, adding event listener");
         startButton.addEventListener("click", startGame);
     } else {
-        console.error("❌ ERROR: startButton not found!");
+        console.error("❌ ERROR: 'startButton' not found in DOM");
     }
 
     if (traceBtn && bruteBtn && ghostBtn) {
@@ -60,20 +101,8 @@ document.addEventListener("DOMContentLoaded", function() {
         bruteBtn.addEventListener("click", () => playerChoice('brute'));
         ghostBtn.addEventListener("click", () => playerChoice('ghost'));
     } else {
-        console.error("❌ ERROR: Choice buttons not found!");
-    }
-
-    if (puzzleSubmit) {
-        puzzleSubmit.addEventListener("click", checkPuzzle);
-    } else {
-        console.error("❌ ERROR: puzzleSubmit button not found!");
-    }
-
-    if (puzzleInput) {
-        puzzleInput.addEventListener("input", function(event) {
-            if (Math.random() > 0.85) {
-                event.target.value = ["I SEE YOU", "STOP TRYING", "YOU ARE MINE"][Math.floor(Math.random() * 3)];
-            }
-        });
+        console.error("❌ ERROR: One or more choice buttons not found!");
     }
 });
+
+// ✅ Removed reference to checkPuzzle to prevent errors
