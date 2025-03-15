@@ -57,7 +57,7 @@
     </style>
 </head>
 <body>
-    <h1 class="glitch">DEDKODE: KILL CHAIN V.1.7</h1>
+    <h1 class="glitch">DEDKODE: KILL CHAIN V.1.7.1</h1>
     <p style="font-size: 24px; font-weight: bold;">Health: <span id="health">3</span></p>
     <textarea id="terminal" readonly></textarea>
     <br>
@@ -87,6 +87,8 @@
                 setTimeout(() => {
                     document.body.innerHTML = "<h1 class='glitch'>GAME OVER</h1><p>You have been claimed by 0Sp3ctr3.</p>";
                 }, 2000);
+            } else {
+                allowNextMove();
             }
         }
 
@@ -102,7 +104,6 @@
             printToTerminal("[DedKode]: \"Yo, You hearing this static? Some ass hat's listening...\"");
             document.getElementById("startButton").style.display = "none";
             document.getElementById("choices").style.display = "block";
-            setTimeout(randomGlitchEffects, 5000);
         }
 
         function playerChoice(option) {
@@ -134,6 +135,10 @@
                 playerHealth--;
                 updateHealth();
             }, 1000);
+        }
+
+        function allowNextMove() {
+            document.getElementById("choices").style.display = "block";
         }
     </script>
 </body>
