@@ -57,7 +57,7 @@
     </style>
 </head>
 <body>
-    <h1 class="glitch">DEDKODE: KILL CHAIN V.1.5</h1>
+    <h1 class="glitch">DEDKODE: KILL CHAIN V.1.7</h1>
     <p style="font-size: 24px; font-weight: bold;">Health: <span id="health">3</span></p>
     <textarea id="terminal" readonly></textarea>
     <br>
@@ -77,15 +77,6 @@
         <img src="jumpscare.png" alt="Scary face" />
         <audio id="jumpscareSound1" src="jumpscare.mp3"></audio>
     </div>
-    <div class="jumpscare" id="jumpscare2">
-        <img src="jumpscare2.png" alt="Scary face 2" />
-        <audio id="jumpscareSound2" src="jumpsound2.mp3"></audio>
-    </div>
-    <div class="jumpscare" id="jumpscare3">
-        <img src="jumpscare3.png" alt="Scary face 3" />
-        <audio id="jumpscareSound3" src="jumpsound3.mp3"></audio>
-    </div>
-    
     <script>
         let playerHealth = 3;
 
@@ -105,51 +96,22 @@
             terminal.scrollTop = terminal.scrollHeight;
         }
 
-        function drawBanner(text) {
-            let line = "=".repeat(text.length);
-            printToTerminal(line);
-            printToTerminal(text);
-            printToTerminal(line);
-        }
-
         function startGame() {
-    console.log("startGame() triggered");
             playerHealth = 3;
             updateHealth();
-            drawBanner("DEDKODE: KILL CHAIN");
-            printToTerminal("Initializing...", true);
-            setTimeout(() => {
-                printToTerminal("\n[DedKode]: \"Yo, You hearing this static? Some ass hat's listening...\"");
-                printToTerminal("[DedKode]: \"No turning back now. Pick your move, fast, bruh.\"");
-                document.getElementById("startButton").style.display = "none";
-                document.getElementById("choices").style.display = "block";
-            }, 3000);
+            printToTerminal("[DedKode]: \"Yo, You hearing this static? Some ass hat's listening...\"");
+            document.getElementById("startButton").style.display = "none";
+            document.getElementById("choices").style.display = "block";
+            setTimeout(randomGlitchEffects, 5000);
         }
 
-        function allowNextMove() {
-            console.log("allowNextMove() triggered");
-            if (playerHealth > 0) {
-                document.getElementById("choices").style.display = "block";
-                document.querySelectorAll("#choices button").forEach(button => {
-                    button.disabled = false;
-                });
-            }
-        }
-            function playerChoice(option) {
-            printToTerminal(`[You]: ${option === 'trace' ? 'Initiating trace...' : option === 'brute' ? 'Deploying brute force attack...' : 'Engaging Ghost Mode...'}`);
+        function playerChoice(option) {
+            printToTerminal(`[You]: ${option.toUpperCase()}...`);
             document.getElementById("choices").style.display = "none";
-            setTimeout(() => {
-                if (option === 'trace') {
-                    printToTerminal("[DedKode]: \"Clever. But Spectre moves faster...\"");
-                } else if (option === 'brute') {
-                    printToTerminal("[DedKode]: \"Loud. Reckless. I like it. Hope you can handle Spectre's response.\"");
-                } else if (option === 'ghost') {
-                    printToTerminal("[DedKode]: \"Smart. But Spectre is watching. It always is.\"");
-                }
-                triggerSpectreGlitch();
-            }, 2000);
+            triggerSpectreGlitch();
         }
-            function triggerSpectreGlitch() {
+
+        function triggerSpectreGlitch() {
             setTimeout(() => {
                 printToTerminal("[0Sp3ctr3]: \"D3dK0d3, y0u c4n't h1d3 f0r3v3r...\"", true);
                 document.body.style.backgroundColor = "red";
@@ -163,16 +125,14 @@
         }
 
         function triggerRandomJumpScare() {
-            let scareId = Math.floor(Math.random() * 3) + 1;
-            let scare = document.getElementById(`jumpscare${scareId}`);
-            let sound = document.getElementById(`jumpscareSound${scareId}`);
+            let scare = document.getElementById("jumpscare1");
+            let sound = document.getElementById("jumpscareSound1");
             scare.style.display = "block";
             sound.play();
             setTimeout(() => {
                 scare.style.display = "none";
                 playerHealth--;
                 updateHealth();
-                allowNextMove();
             }, 1000);
         }
     </script>
