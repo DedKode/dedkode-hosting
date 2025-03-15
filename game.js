@@ -40,101 +40,40 @@ function playerChoice(option) {
     triggerSpectreGlitch();
 }
 
-// 👀 SPECTRE GLITCH EFFECTS
-function triggerSpectreGlitch() {
-    setTimeout(() => {
-        printToTerminal("[0Sp3ctr3]: \"D3dK0d3, y0u c4n't h1d3 f0r3v3r...\"", true);
-        document.body.style.backgroundColor = "red";
-        document.body.classList.add("glitch");
-        setTimeout(() => {
-            document.body.style.backgroundColor = "black";
-            document.body.classList.remove("glitch");
-            triggerRandomJumpScare();
-        }, 1500);
-    }, 3000);
-}
+// Wait for the DOM to fully load before adding event listeners
+document.addEventListener("DOMContentLoaded", function() {
+    let startButton = document.getElementById("startButton");
+    let traceBtn = document.getElementById("traceBtn");
+    let bruteBtn = document.getElementById("bruteBtn");
+    let ghostBtn = document.getElementById("ghostBtn");
+    let puzzleInput = document.getElementById("puzzleInput");
+    let puzzleSubmit = document.getElementById("puzzleSubmit");
 
-// 💀 RANDOM JUMPSCARE
-function triggerRandomJumpScare() {
-    let scareId = Math.floor(Math.random() * 3) + 1;
-    let scare = document.getElementById(`jumpscare${scareId}`);
-    let sound = document.getElementById(`jumpscareSound${scareId}`);
+    if (startButton) {
+        startButton.addEventListener("click", startGame);
+    } else {
+        console.error("❌ ERROR: startButton not found!");
+    }
 
-    console.log("Triggering jumpscare:", scareId);
-    
-    scare.style.display = "block";
-    sound.play();
+    if (traceBtn && bruteBtn && ghostBtn) {
+        traceBtn.addEventListener("click", () => playerChoice('trace'));
+        bruteBtn.addEventListener("click", () => playerChoice('brute'));
+        ghostBtn.addEventListener("click", () => playerChoice('ghost'));
+    } else {
+        console.error("❌ ERROR: Choice buttons not found!");
+    }
 
-    setTimeout(() => {
-        scare.style.display = "none";
-        playerHealth--;
-        updateHealth();
-    }, 1000);
-}
+    if (puzzleSubmit) {
+        puzzleSubmit.addEventListener("click", checkPuzzle);
+    } else {
+        console.error("❌ ERROR: puzzleSubmit button not found!");
+    }
 
-// 🎮 ALLOW NEXT MOVE
-function allowNextMove() {
-    let choicesDiv = document.getElementById("choices");
-    if (playerHealth > 0) {
-        choicesDiv.style.display = "block";
-        document.querySelectorAll("#choices button").forEach(button => {
-            button.disabled = false; // Re-enable choices
+    if (puzzleInput) {
+        puzzleInput.addEventListener("input", function(event) {
+            if (Math.random() > 0.85) {
+                event.target.value = ["I SEE YOU", "STOP TRYING", "YOU ARE MINE"][Math.floor(Math.random() * 3)];
+            }
         });
     }
-}
-
-// 🕵️‍♂️ SPECTRE PARANOIA SYSTEM (Idle & Click Detection)
-document.querySelectorAll("#choices button").forEach(button => {
-    button.addEventListener("click", () => {
-        clearTimeout(idleTimer);
-        idleTimer = setTimeout(triggerSpectreGlitch, 10000);  // 10 sec idle trigger
-
-        let option = button.innerText.toLowerCase();
-        clickCounts[option]++;
-        if (clickCounts[option] >= 3) {
-            printToTerminal("[ERROR] Spectre is watching...", true);
-            document.body.style.backgroundColor = "darkred";
-            setTimeout(() => document.body.style.backgroundColor = "black", 500);
-            clickCounts[option] = 0;  // Reset count
-        }
-    });
-});
-
-// 🔥 UI GLITCHES & ERRORS
-function glitchTerminalText() {
-    let terminal = document.getElementById("terminal");
-    let originalText = terminal.value;
-    terminal.value = originalText.replace(/[A-Za-z]/g, char => Math.random() > 0.5 ? "█" : char);
-    setTimeout(() => terminal.value = originalText, 1000);
-}
-
-function fakeConnectionLost() {
-    printToTerminal("[ERROR] CONNECTION LOST...");
-    document.body.innerHTML = "<h1 class='glitch'>CONNECTION LOST</h1>";
-    setTimeout(() => location.reload(), 3000); // Refresh game after fake error
-}
-
-// 🔄 RANDOM HEALTH FLICKER
-setInterval(() => {
-    let healthDisplay = document.getElementById("health");
-    if (Math.random() > 0.7) {
-        healthDisplay.textContent = "??";
-        setTimeout(() => healthDisplay.textContent = playerHealth, 500);
-    }
-}, 5000);
-
-// 🔠 PUZZLE INPUT HIJACK
-document.getElementById("puzzleInput").addEventListener("input", function(event) {
-    if (Math.random() > 0.85) {
-        event.target.value = ["I SEE YOU", "STOP TRYING", "YOU ARE MINE"][Math.floor(Math.random() * 3)];
-    }
-});
-
-// Wait for the DOM to fully load before adding event listeners
-document.addEventListener("DOMContentLoaded", () => {
-    document.getElementById("startButton").addEventListener("click", startGame);
-    document.getElementById("traceBtn").addEventListener("click", () => playerChoice('trace'));
-    document.getElementById("bruteBtn").addEventListener("click", () => playerChoice('brute'));
-    document.getElementById("ghostBtn").addEventListener("click", () => playerChoice('ghost'));
-    document.getElementById("puzzleSubmit").addEventListener("click", checkPuzzle);
 });
