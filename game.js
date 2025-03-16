@@ -1,7 +1,7 @@
 // ✅ Debugging message to ensure script is loading
 console.log("✅ game.js loaded successfully!");
 
-// GAME VARIABLES
+// GAME VARIABLES v.2
 let playerHealth = 5;
 let corruption = 0;
 let inventory = { backupFile: 0, firewallShield: 0, purgeCommand: 0 };
