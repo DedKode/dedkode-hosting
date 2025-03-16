@@ -1,10 +1,11 @@
 // ✅ Debugging message to ensure script is loading
 console.log("✅ game.js loaded successfully!");
 
-// GAME VARIABLES v.3
+// GAME VARIABLES v.4
 let playerHealth = 5;
 let corruption = 0;
-let inventory = { backupFile: 0, firewallShield: 0, purgeCommand: 0 };
+let spectreAwareness = 0; // NEW: Spectre remembers actions
+let inventory = { backupFile: 1, firewallShield: 1, purgeCommand: 1 };
 
 // ✅ PRINT TO TERMINAL (Declared First)
 function printToTerminal(text, isGlitch = false) {
@@ -17,7 +18,7 @@ function printToTerminal(text, isGlitch = false) {
     }
 }
 
-// 🚀 UPDATE PLAYER HEALTH & CORRUPTION
+// 🚀 UPDATE PLAYER HEALTH, CORRUPTION & CHECK WIN/LOSS
 function updateStats() {
     let healthElement = document.getElementById("health");
     let corruptionElement = document.getElementById("corruption");
@@ -26,70 +27,19 @@ function updateStats() {
     if (corruptionElement) corruptionElement.textContent = corruption;
 
     if (playerHealth <= 0) {
-        printToTerminal("[0Sp3ctr3]: \"Y0u b3l0ng t0 m3 n0w...\"", true);
-        setTimeout(() => {
-            document.body.innerHTML = "<h1 class='glitch'>GAME OVER</h1><p>You have been claimed by 0Sp3ctr3.</p>";
-        }, 2000);
+        loseGame("Spectre has consumed you.");
     }
 
     if (corruption >= 5) {
-        printToTerminal("[0Sp3ctr3]: \"Syst3m Ov3rrid3. You ar3 m1n3.\"", true);
-        setTimeout(() => {
-            document.body.innerHTML = "<h1 class='glitch'>YOU HAVE BEEN ERASED.</h1><p>0Sp3ctr3 has taken over your mind.</p>";
-        }, 2000);
+        loseGame("Spectre has overwritten your consciousness.");
+    }
+
+    if (spectreAwareness >= 5) {
+        winGame("You have outmaneuvered Spectre and escaped.");
     }
 }
 
-// ✅ NEW: INVENTORY SYSTEM (HACKING TOOLS)
-function useItem(item) {
-    if (inventory[item] > 0) {
-        if (item === "backupFile") {
-            playerHealth = Math.min(5, playerHealth + 1);
-            printToTerminal("[SYSTEM]: Backup File Restored. +1 HP");
-        } else if (item === "firewallShield") {
-            printToTerminal("[SYSTEM]: Firewall Active. Next attack blocked.");
-            inventory.firewallShield--;
-        } else if (item === "purgeCommand") {
-            corruption = 0;
-            playerHealth--;
-            printToTerminal("[SYSTEM]: Purge Complete. Corruption Reset. -1 HP");
-        }
-        inventory[item]--;
-        updateStats();
-    } else {
-        printToTerminal("[ERROR]: No more of that item left.");
-    }
-}
-
-// ✅ ALLOW NEXT MOVE (ENSURES CHOICES RETURN AFTER EVENTS)
-function allowNextMove() {
-    let choicesDiv = document.getElementById("choices");
-    if (choicesDiv) {
-        choicesDiv.style.display = "block";
-        document.querySelectorAll("#choices button").forEach(button => {
-            button.disabled = false;
-        });
-    } else {
-        console.error("❌ ERROR: 'choices' element not found!");
-    }
-}
-
-// 🛠 START GAME (FULLY FIXED)
-function startGame() {
-    console.log("🔥 startGame() triggered");
-    playerHealth = 5;
-    corruption = 0;
-    updateStats();
-    printToTerminal("[DedKode]: \"Yo, You hearing this static? Some ass hat's listening...\"");
-
-    let startButton = document.getElementById("startButton");
-    let choicesDiv = document.getElementById("choices");
-
-    if (startButton) startButton.style.display = "none";
-    if (choicesDiv) choicesDiv.style.display = "block";
-}
-
-// 🎭 PLAYER CHOICE (Spectre Fights Back)
+// ✅ NEW: BRANCHING PATHS & AI MEMORY SYSTEM
 function playerChoice(option) {
     printToTerminal(`[You]: ${option.toUpperCase()}...`);
     document.getElementById("choices").style.display = "none";
@@ -97,59 +47,15 @@ function playerChoice(option) {
     if (option === "trace") {
         printToTerminal("[0Sp3ctr3]: \"G00d luck tr4ck1ng m3...\"", true);
         corruption++;
+        spectreAwareness++;
+        if (spectreAwareness >= 3) {
+            printToTerminal("[ERROR]: Spectre is adapting. Tracing is becoming unreliable.");
+        }
     } else if (option === "brute") {
-        printToTerminal("[ERROR]: Spectre is fighting back!");
+        printToTerminal("[ERROR]: Spectre is counter-attacking!");
         playerHealth--;
         corruption++;
-    } else if (option === "ghost") {
-        printToTerminal("[SYSTEM]: Engaging Ghost Mode...");
-    }
-    
-    triggerSpectreGlitch();
-}
-
-// ✅ SPECTRE GLITCH EFFECTS (NOW GUARANTEED TO WORK)
-function triggerSpectreGlitch() {
-    console.log("👻 triggerSpectreGlitch() called!");
-    setTimeout(() => {
-        printToTerminal("[0Sp3ctr3]: \"D3dK0d3, y0u c4n't h1d3 f0r3v3r...\"", true);
-        document.body.style.backgroundColor = "red";
-        document.body.classList.add("glitch");
-        setTimeout(() => {
-            document.body.style.backgroundColor = "black";
-            document.body.classList.remove("glitch");
-            triggerRandomJumpScare();
-        }, 1500);
-    }, 3000);
-}
-
-// 💀 RANDOM JUMPSCARE FUNCTION (NOW ENSURES GAME RESUMES)
-function triggerRandomJumpScare() {
-    let scareId = Math.floor(Math.random() * 3) + 1;
-    let scare = document.getElementById(`jumpscare${scareId}`);
-    let sound = document.getElementById(`jumpscareSound${scareId}`);
-
-    if (scare && sound) {
-        scare.style.display = "block";
-        sound.play();
-
-        setTimeout(() => {
-            scare.style.display = "none";
-            playerHealth--;
-            updateStats();
-
-            console.log("✅ Jumpscare ended. Returning control to player.");
-            allowNextMove(); // ✅ THIS LINE ENSURES CONTROLS RETURN
-        }, 1000);
-    } else {
-        console.error(`❌ ERROR: Jumpscare file ${scareId} missing!`);
-    }
-}
-
-// 🔥 EVENT LISTENER ATTACHMENT (FINAL FIX)
-document.addEventListener("DOMContentLoaded", function() {
-    document.getElementById("startButton")?.addEventListener("click", startGame);
-    document.getElementById("traceBtn")?.addEventListener("click", () => playerChoice('trace'));
-    document.getElementById("bruteBtn")?.addEventListener("click", () => playerChoice('brute'));
-    document.getElementById("ghostBtn")?.addEventListener("click", () => playerChoice('ghost'));
-});
+        spectreAwareness += 2;
+        if (spectreAwareness >= 4) {
+            printToTerminal("[ERROR]: Spectre has learned to predict brute force attacks.");
+        }
