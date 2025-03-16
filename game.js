@@ -1,12 +1,12 @@
 // ✅ Debugging message to ensure script is loading
 console.log("✅ game.js loaded successfully!");
 
-// GAME VARIABLES v.2
+// GAME VARIABLES v.3
 let playerHealth = 5;
 let corruption = 0;
 let inventory = { backupFile: 0, firewallShield: 0, purgeCommand: 0 };
 
-// ✅ PRINT TO TERMINAL (Now Defined First)
+// ✅ PRINT TO TERMINAL (Declared First)
 function printToTerminal(text, isGlitch = false) {
     let terminal = document.getElementById("terminal");
     if (terminal) {
@@ -123,7 +123,7 @@ function triggerSpectreGlitch() {
     }, 3000);
 }
 
-// 💀 RANDOM JUMPSCARE FUNCTION
+// 💀 RANDOM JUMPSCARE FUNCTION (NOW ENSURES GAME RESUMES)
 function triggerRandomJumpScare() {
     let scareId = Math.floor(Math.random() * 3) + 1;
     let scare = document.getElementById(`jumpscare${scareId}`);
@@ -132,11 +132,17 @@ function triggerRandomJumpScare() {
     if (scare && sound) {
         scare.style.display = "block";
         sound.play();
+
         setTimeout(() => {
             scare.style.display = "none";
             playerHealth--;
             updateStats();
+
+            console.log("✅ Jumpscare ended. Returning control to player.");
+            allowNextMove(); // ✅ THIS LINE ENSURES CONTROLS RETURN
         }, 1000);
+    } else {
+        console.error(`❌ ERROR: Jumpscare file ${scareId} missing!`);
     }
 }
 
