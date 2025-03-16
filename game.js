@@ -99,3 +99,81 @@ function triggerRandomJumpScare() {
 
             console.log("✅ Jumpscare ended. Returning control to player.");
             allowNextMove();
+        }, 1000);
+    } else {
+        console.error(`❌ ERROR: Jumpscare file ${scareId} missing!`);
+    }
+}
+
+// ✅ WIN & LOSE CONDITIONS
+function winGame(message) {
+    printToTerminal(`[SYSTEM]: ${message}`);
+    setTimeout(() => {
+        document.body.innerHTML = `<h1 class='glitch'>YOU ESCAPED</h1><p>${message}</p>`;
+    }, 2000);
+}
+
+function loseGame(message) {
+    printToTerminal(`[ERROR]: ${message}`);
+    setTimeout(() => {
+        document.body.innerHTML = `<h1 class='glitch'>GAME OVER</h1><p>${message}</p>`;
+    }, 2000);
+}
+
+// ✅ SURVIVAL MECHANICS: HEALING & DEFENSES
+function useItem(item) {
+    if (inventory[item] > 0) {
+        if (item === "backupFile") {
+            playerHealth = Math.min(5, playerHealth + 1);
+            printToTerminal("[SYSTEM]: Backup File Restored. +1 HP");
+        } else if (item === "firewallShield") {
+            printToTerminal("[SYSTEM]: Firewall Active. Next attack blocked.");
+            inventory.firewallShield--;
+        } else if (item === "purgeCommand") {
+            corruption = 0;
+            playerHealth--;
+            printToTerminal("[SYSTEM]: Purge Complete. Corruption Reset. -1 HP");
+        }
+        inventory[item]--;
+        updateStats();
+    } else {
+        printToTerminal("[ERROR]: No more of that item left.");
+    }
+}
+
+// ✅ ALLOW NEXT MOVE (ENSURES CHOICES RETURN AFTER EVENTS)
+function allowNextMove() {
+    let choicesDiv = document.getElementById("choices");
+    if (choicesDiv) {
+        choicesDiv.style.display = "block";
+        document.querySelectorAll("#choices button").forEach(button => {
+            button.disabled = false;
+        });
+    } else {
+        console.error("❌ ERROR: 'choices' element not found!");
+    }
+}
+
+// 🛠 START GAME (FINAL VERSION)
+function startGame() {
+    console.log("🔥 startGame() triggered");
+    playerHealth = 5;
+    corruption = 0;
+    spectreAwareness = 0;
+    updateStats();
+    printToTerminal("[DedKode]: \"Yo, You hearing this static? Some ass hat's listening...\"");
+
+    let startButton = document.getElementById("startButton");
+    let choicesDiv = document.getElementById("choices");
+
+    if (startButton) startButton.style.display = "none";
+    if (choicesDiv) choicesDiv.style.display = "block";
+}
+
+// 🔥 EVENT LISTENER ATTACHMENT (FINAL FIX)
+document.addEventListener("DOMContentLoaded", function() {
+    document.getElementById("startButton")?.addEventListener("click", startGame);
+    document.getElementById("traceBtn")?.addEventListener("click", () => playerChoice('trace'));
+    document.getElementById("bruteBtn")?.addEventListener("click", () => playerChoice('brute'));
+    document.getElementById("ghostBtn")?.addEventListener("click", () => playerChoice('ghost'));
+});
