@@ -28,13 +28,9 @@ function updateStats() {
 
     if (playerHealth <= 0) {
         loseGame("Spectre has consumed you.");
-    }
-
-    if (corruption >= 5) {
+    } else if (corruption >= 5) {
         loseGame("Spectre has overwritten your consciousness.");
-    }
-
-    if (spectreAwareness >= 5) {
+    } else if (spectreAwareness >= 5) {
         winGame("You have outmaneuvered Spectre and escaped.");
     }
 }
@@ -59,3 +55,47 @@ function playerChoice(option) {
         if (spectreAwareness >= 4) {
             printToTerminal("[ERROR]: Spectre has learned to predict brute force attacks.");
         }
+    } else if (option === "ghost") {
+        printToTerminal("[SYSTEM]: Engaging Ghost Mode...");
+        spectreAwareness--;
+        if (spectreAwareness <= 0) {
+            printToTerminal("[DedKode]: \"Nice move. Spectre lost your signal for now.\"");
+        }
+    }
+
+    updateStats();
+    triggerSpectreGlitch();
+}
+
+// ✅ SPECTRE GLITCH EFFECTS (NOW FULLY DYNAMIC)
+function triggerSpectreGlitch() {
+    console.log("👻 triggerSpectreGlitch() called!");
+    setTimeout(() => {
+        printToTerminal("[0Sp3ctr3]: \"D3dK0d3, y0u c4n't h1d3 f0r3v3r...\"", true);
+        document.body.style.backgroundColor = "red";
+        document.body.classList.add("glitch");
+        setTimeout(() => {
+            document.body.style.backgroundColor = "black";
+            document.body.classList.remove("glitch");
+            triggerRandomJumpScare();
+        }, 1500);
+    }, 3000);
+}
+
+// 💀 RANDOM JUMPSCARE FUNCTION (NOW ENSURES GAME RESUMES)
+function triggerRandomJumpScare() {
+    let scareId = Math.floor(Math.random() * 3) + 1;
+    let scare = document.getElementById(`jumpscare${scareId}`);
+    let sound = document.getElementById(`jumpscareSound${scareId}`);
+
+    if (scare && sound) {
+        scare.style.display = "block";
+        sound.play();
+
+        setTimeout(() => {
+            scare.style.display = "none";
+            playerHealth--;
+            updateStats();
+
+            console.log("✅ Jumpscare ended. Returning control to player.");
+            allowNextMove();
