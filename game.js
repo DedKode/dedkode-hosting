@@ -1,10 +1,10 @@
 // ✅ Debugging message to ensure script is loading
 console.log("✅ game.js loaded successfully!");
 
-// GAME VARIABLES v.4.1
+// GAME VARIABLES v.5
 let playerHealth = 5;
 let corruption = 0;
-let spectreAwareness = 0; // NEW: Spectre remembers actions
+let spectreAwareness = 0; // Spectre remembers actions
 let inventory = { backupFile: 1, firewallShield: 1, purgeCommand: 1 };
 
 // ✅ PRINT TO TERMINAL (Declared First)
@@ -35,7 +35,7 @@ function updateStats() {
     }
 }
 
-// ✅ NEW: BRANCHING PATHS & AI MEMORY SYSTEM
+// ✅ PLAYER CHOICE (Now Includes DedKode Feedback)
 function playerChoice(option) {
     printToTerminal(`[You]: ${option.toUpperCase()}...`);
     document.getElementById("choices").style.display = "none";
@@ -59,6 +59,7 @@ function playerChoice(option) {
         printToTerminal("[SYSTEM]: Engaging Ghost Mode...");
         spectreAwareness--;
         if (spectreAwareness <= 0) {
+            showDedKodeImage("dedkode_nod.png");
             printToTerminal("[DedKode]: \"Nice move. Spectre lost your signal for now.\"");
         }
     }
@@ -67,113 +68,42 @@ function playerChoice(option) {
     triggerSpectreGlitch();
 }
 
-// ✅ SPECTRE GLITCH EFFECTS (NOW FULLY DYNAMIC)
+// ✅ SPECTRE GLITCH EFFECTS (Now Mixed with DedKode Moments)
 function triggerSpectreGlitch() {
     console.log("👻 triggerSpectreGlitch() called!");
     setTimeout(() => {
-        printToTerminal("[0Sp3ctr3]: \"D3dK0d3, y0u c4n't h1d3 f0r3v3r...\"", true);
-        document.body.style.backgroundColor = "red";
-        document.body.classList.add("glitch");
-        setTimeout(() => {
-            document.body.style.backgroundColor = "black";
-            document.body.classList.remove("glitch");
-            triggerRandomJumpScare();
-        }, 1500);
+        if (Math.random() > 0.5) {
+            printToTerminal("[0Sp3ctr3]: \"D3dK0d3, y0u c4n't h1d3 f0r3v3r...\"", true);
+            document.body.style.backgroundColor = "red";
+            document.body.classList.add("glitch");
+            setTimeout(() => {
+                document.body.style.backgroundColor = "black";
+                document.body.classList.remove("glitch");
+                triggerRandomEvent();
+            }, 1500);
+        } else {
+            showDedKodeImage("dedkode_smirk.png");
+            printToTerminal("[DedKode]: \"You’re getting better at this... but don't get cocky.\"");
+        }
     }, 3000);
 }
 
-// 💀 RANDOM JUMPSCARE FUNCTION (NOW ENSURES GAME RESUMES)
-function triggerRandomJumpScare() {
-    let scareId = Math.floor(Math.random() * 3) + 1;
-    let scare = document.getElementById(`jumpscare${scareId}`);
-    let sound = document.getElementById(`jumpscareSound${scareId}`);
+// ✅ RANDOM EVENT (Can Be a Jump Scare or DedKode Moment)
+function triggerRandomEvent() {
+    let eventRoll = Math.random();
 
-    if (scare && sound) {
-        scare.style.display = "block";
-        sound.play();
-
-        setTimeout(() => {
-            scare.style.display = "none";
-            playerHealth--;
-            updateStats();
-
-            console.log("✅ Jumpscare ended. Returning control to player.");
-            allowNextMove();
-        }, 1000);
+    if (eventRoll > 0.6) {
+        triggerRandomJumpScare();
+    } else if (eventRoll > 0.3) {
+        showDedKodeImage("dedkode_warning.png");
+        printToTerminal("[DedKode]: \"Yo, be careful. You’re playing right into Spectre’s hands...\"");
     } else {
-        console.error(`❌ ERROR: Jumpscare file ${scareId} missing!`);
+        showDedKodeImage("dedkode_glitch.png");
+        printToTerminal("[ERROR]: DedKode.exe has encountered an anomaly...");
     }
 }
 
-// ✅ WIN & LOSE CONDITIONS
-function winGame(message) {
-    printToTerminal(`[SYSTEM]: ${message}`);
-    setTimeout(() => {
-        document.body.innerHTML = `<h1 class='glitch'>YOU ESCAPED</h1><p>${message}</p>`;
-    }, 2000);
-}
-
-function loseGame(message) {
-    printToTerminal(`[ERROR]: ${message}`);
-    setTimeout(() => {
-        document.body.innerHTML = `<h1 class='glitch'>GAME OVER</h1><p>${message}</p>`;
-    }, 2000);
-}
-
-// ✅ SURVIVAL MECHANICS: HEALING & DEFENSES
-function useItem(item) {
-    if (inventory[item] > 0) {
-        if (item === "backupFile") {
-            playerHealth = Math.min(5, playerHealth + 1);
-            printToTerminal("[SYSTEM]: Backup File Restored. +1 HP");
-        } else if (item === "firewallShield") {
-            printToTerminal("[SYSTEM]: Firewall Active. Next attack blocked.");
-            inventory.firewallShield--;
-        } else if (item === "purgeCommand") {
-            corruption = 0;
-            playerHealth--;
-            printToTerminal("[SYSTEM]: Purge Complete. Corruption Reset. -1 HP");
-        }
-        inventory[item]--;
-        updateStats();
-    } else {
-        printToTerminal("[ERROR]: No more of that item left.");
-    }
-}
-
-// ✅ ALLOW NEXT MOVE (ENSURES CHOICES RETURN AFTER EVENTS)
-function allowNextMove() {
-    let choicesDiv = document.getElementById("choices");
-    if (choicesDiv) {
-        choicesDiv.style.display = "block";
-        document.querySelectorAll("#choices button").forEach(button => {
-            button.disabled = false;
-        });
-    } else {
-        console.error("❌ ERROR: 'choices' element not found!");
-    }
-}
-
-// 🛠 START GAME (FINAL VERSION)
-function startGame() {
-    console.log("🔥 startGame() triggered");
-    playerHealth = 5;
-    corruption = 0;
-    spectreAwareness = 0;
-    updateStats();
-    printToTerminal("[DedKode]: \"Yo, You hearing this static? Some ass hat's listening...\"");
-
-    let startButton = document.getElementById("startButton");
-    let choicesDiv = document.getElementById("choices");
-
-    if (startButton) startButton.style.display = "none";
-    if (choicesDiv) choicesDiv.style.display = "block";
-}
-
-// 🔥 EVENT LISTENER ATTACHMENT (FINAL FIX)
-document.addEventListener("DOMContentLoaded", function() {
-    document.getElementById("startButton")?.addEventListener("click", startGame);
-    document.getElementById("traceBtn")?.addEventListener("click", () => playerChoice('trace'));
-    document.getElementById("bruteBtn")?.addEventListener("click", () => playerChoice('brute'));
-    document.getElementById("ghostBtn")?.addEventListener("click", () => playerChoice('ghost'));
-});
+// ✅ SHOW DEDKODE IMAGE
+function showDedKodeImage(imageFile) {
+    let dedKodeImg = document.getElementById("dedKodeImage");
+    if (
