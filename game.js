@@ -1,7 +1,7 @@
 // ✅ Debugging message to ensure script is loading
 console.log("✅ game.js loaded successfully!");
 
-// GAME VARIABLES v.5
+// GAME VARIABLES v.6
 let playerHealth = 5;
 let corruption = 0;
 let spectreAwareness = 0; // Spectre remembers actions
@@ -106,4 +106,69 @@ function triggerRandomEvent() {
 // ✅ SHOW DEDKODE IMAGE
 function showDedKodeImage(imageFile) {
     let dedKodeImg = document.getElementById("dedKodeImage");
-    if (
+    if (dedKodeImg) {
+        dedKodeImg.src = imageFile;
+        dedKodeImg.style.display = "block";
+
+        setTimeout(() => {
+            dedKodeImg.style.display = "none";
+        }, 1500);
+    }
+}
+
+// ✅ WIN & LOSE CONDITIONS (Now Includes Try Again Button)
+function winGame(message) {
+    printToTerminal(`[SYSTEM]: ${message}`);
+    setTimeout(() => {
+        document.body.innerHTML = `<h1 class='glitch'>YOU ESCAPED</h1><p>${message}</p><button onclick="restartGame()">TRY AGAIN</button>`;
+    }, 2000);
+}
+
+function loseGame(message) {
+    printToTerminal(`[ERROR]: ${message}`);
+    setTimeout(() => {
+        document.body.innerHTML = `<h1 class='glitch'>GAME OVER</h1><p>${message}</p><button onclick="restartGame()">TRY AGAIN</button>`;
+    }, 2000);
+}
+
+// ✅ RESTART GAME FUNCTION
+function restartGame() {
+    location.reload();
+}
+
+// ✅ ALLOW NEXT MOVE (ENSURES CHOICES RETURN AFTER EVENTS)
+function allowNextMove() {
+    let choicesDiv = document.getElementById("choices");
+    if (choicesDiv) {
+        choicesDiv.style.display = "block";
+        document.querySelectorAll("#choices button").forEach(button => {
+            button.disabled = false;
+        });
+    } else {
+        console.error("❌ ERROR: 'choices' element not found!");
+    }
+}
+
+// 🛠 START GAME (FINAL VERSION)
+function startGame() {
+    console.log("🔥 startGame() triggered");
+    playerHealth = 5;
+    corruption = 0;
+    spectreAwareness = 0;
+    updateStats();
+    printToTerminal("[DedKode]: \"Yo, You hearing this static? Some ass hat's listening...\"");
+
+    let startButton = document.getElementById("startButton");
+    let choicesDiv = document.getElementById("choices");
+
+    if (startButton) startButton.style.display = "none";
+    if (choicesDiv) choicesDiv.style.display = "block";
+}
+
+// 🔥 EVENT LISTENER ATTACHMENT
+document.addEventListener("DOMContentLoaded", function() {
+    document.getElementById("startButton")?.addEventListener("click", startGame);
+    document.getElementById("traceBtn")?.addEventListener("click", () => playerChoice('trace'));
+    document.getElementById("bruteBtn")?.addEventListener("click", () => playerChoice('brute'));
+    document.getElementById("ghostBtn")?.addEventListener("click", () => playerChoice('ghost'));
+});
