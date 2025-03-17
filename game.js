@@ -1,7 +1,7 @@
 // ✅ Debugging message to ensure script is loading
 console.log("✅ game.js loaded successfully!");
 
-// GAME VARIABLES v.4
+// GAME VARIABLES v.4.1
 let playerHealth = 5;
 let corruption = 0;
 let spectreAwareness = 0; // NEW: Spectre remembers actions
