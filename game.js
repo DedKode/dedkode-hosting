@@ -84,6 +84,11 @@ function triggerSpectreGlitch() {
         } else {
             showDedKodeImage("dedkode_smirk.png");
             printToTerminal("[DedKode]: \"You’re getting better at this... but don't get cocky.\"");
+
+            setTimeout(() => {
+                printToTerminal("[SYSTEM]: Control Restored.");
+                allowNextMove();
+            }, 2000);
         }
     }, 3000);
 }
