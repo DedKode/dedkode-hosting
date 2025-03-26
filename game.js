@@ -102,9 +102,19 @@ function triggerRandomEvent() {
     } else if (eventRoll > 0.3) {
         showDedKodeImage("dedkode_warning.png");
         printToTerminal("[DedKode]: \"Yo, be careful. You’re playing right into Spectre’s hands...\"");
+
+        setTimeout(() => {
+            printToTerminal("[SYSTEM]: Control Restored.");
+            allowNextMove();
+        }, 2000);
     } else {
         showDedKodeImage("dedkode_glitch.png");
         printToTerminal("[ERROR]: DedKode.exe has encountered an anomaly...");
+
+        setTimeout(() => {
+            printToTerminal("[SYSTEM]: Control Restored.");
+            allowNextMove();
+        }, 2000);
     }
 }
 
