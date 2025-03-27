@@ -1,7 +1,7 @@
 // ✅ Debugging message to ensure script is loading
 console.log("✅ game.js loaded successfully!");
 
-// GAME VARIABLES v.6
+// GAME VARIABLES v.7
 let playerHealth = 5;
 let corruption = 0;
 let spectreAwareness = 0; // Spectre remembers actions
@@ -128,6 +128,28 @@ function showDedKodeImage(imageFile) {
         setTimeout(() => {
             dedKodeImg.style.display = "none";
         }, 1500);
+    }
+}
+
+// ✅ JUMPSCARE TRIGGER FUNCTION
+function triggerRandomJumpScare() {
+    let scareId = Math.floor(Math.random() * 3) + 1;
+    let scare = document.getElementById(`jumpscare${scareId}`);
+    let sound = document.getElementById(`jumpscareSound${scareId}`);
+
+    if (scare && sound) {
+        scare.style.display = "block";
+        sound.play();
+
+        setTimeout(() => {
+            scare.style.display = "none";
+            playerHealth--;
+            updateStats();
+            allowNextMove();
+        }, 1000);
+    } else {
+        console.error(`❌ ERROR: Jumpscare ${scareId} elements missing!`);
+        allowNextMove();
     }
 }
 
