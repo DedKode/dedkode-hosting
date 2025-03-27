@@ -57,7 +57,7 @@
   </style>
 </head>
 <body>
-  <h1 class="glitch">DEDKODE: KILL CHAIN v1.5</h1>
+  <h1 class="glitch">DEDKODE: KILL CHAIN v2.0</h1>
   <p style="font-size: 24px; font-weight: bold;">
     Health: <span id="health">5</span> | Corruption: <span id="corruption">0</span>
   </p>
@@ -72,13 +72,14 @@
     <button id="ghostBtn">Go Ghost Mode</button>
   </div>
 
-  <!-- DedKode Image -->
-  <img id="dedKodeImage" src="" alt="DedKode Moment"
-       style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; object-fit:cover; z-index:9998;">
+  <!-- DedKode Face Drop -->
+  <img id="dedKodeImage" src="" alt="DedKode"
+       style="display:none; position:fixed; top:50%; left:50%; transform:translate(-50%, -50%);
+              width: 40vw; height:auto; z-index:9998; border:2px solid lime; filter:drop-shadow(0 0 10px lime);">
 
   <!-- Jumpscares -->
   <div class="jumpscare" id="jumpscare1">
-    <img src="jumpscare.png" alt="Scary face" />
+    <img src="jumpscare.png" alt="Scary face 1" />
     <audio id="jumpscareSound1" src="jumpscare.mp3"></audio>
   </div>
   <div class="jumpscare" id="jumpscare2">
