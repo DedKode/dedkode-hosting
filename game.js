@@ -1,54 +1,88 @@
 // ✅ Debugging message to ensure script is loading
 console.log("✅ game.js loaded successfully!");
 
-// GAME VARIABLES v.8
 let playerHealth = 5;
 let corruption = 0;
 let spectreAwareness = 0;
 let puzzleStage = 0;
-let moralScore = 0;
+moralScore = 0;
 let inventory = { backupFile: 1, firewallShield: 1, purgeCommand: 1 };
+let unlockedOblivion = false;
 
-// ✅ PRINT TO TERMINAL
+const dedKodeLines = {
+  praise: [
+    "Well f█ck me with a floppy—you actually scared him.",
+    "Spectre’s glitchin' like a b█tch. Keep pushin'...",
+    "Whatever the hell you just did? Do that *again*.",
+    "Damn. Didn’t think you had that in you.",
+  ],
+  roast: [
+    "What the f█ck was that? That ain’t even legal in BASIC.",
+    "You just brute forced your way into the void, genius.",
+    "Spectre didn’t even try. You *fell* into that trap.",
+    "That health bar’s gaslighting you."
+  ],
+  eerie: [
+    "You feel that? That’s not lag—it’s breathing.",
+    "Spectre’s watching... and it’s smiling.",
+    "Keep clicking. He loves that desperation.",
+    "This ain’t a game anymore. It’s a f█cking séance."
+  ]
+};
+
+function randomLine(type) {
+  const lines = dedKodeLines[type];
+  return lines[Math.floor(Math.random() * lines.length)];
+}
+
 function printToTerminal(text, isGlitch = false) {
-  let terminal = document.getElementById("terminal");
+  const terminal = document.getElementById("terminal");
   if (terminal) {
     terminal.value += (isGlitch ? "[ERROR] " : "") + text + "\n";
     terminal.scrollTop = terminal.scrollHeight;
-  } else {
-    console.error("❌ ERROR: 'terminal' element not found!");
   }
 }
 
-// 🚀 UPDATE PLAYER STATS
 function updateStats() {
   document.getElementById("health").textContent = playerHealth;
   document.getElementById("corruption").textContent = corruption;
+  updateInventoryDisplay();
+  maybeGlitchScreen();
 
   if (playerHealth <= 0) loseGame("Spectre has consumed you.");
-  else if (corruption >= 5) loseGame("Spectre has overwritten your consciousness.");
-  else if (spectreAwareness >= 5 && puzzleStage >= 2 && moralScore >= 2) winGame("You have unlocked the clean escape route.");
+  else if (corruption >= 5) fakeCrashScreen();
+  else if (spectreAwareness >= 5 && puzzleStage >= 2 && moralScore >= 2 && unlockedOblivion) {
+    winGame("You unlocked the OBLIVION PATH. You don’t escape. You become.");
+  }
 }
 
-// 🎭 PLAYER CHOICE
 function playerChoice(option) {
   printToTerminal(`[You]: ${option.toUpperCase()}...`);
   document.getElementById("choices").style.display = "none";
 
+  if (option.toUpperCase() === "OBLIVION") {
+    unlockedOblivion = true;
+    printToTerminal("[DedKode]: \"Well well. Someone read the f█ckin' fine print.\"");
+    moralScore++;
+    updateStats();
+    allowNextMove();
+    return;
+  }
+
   if (option === "trace") {
     corruption++;
     spectreAwareness++;
-    printToTerminal("[0Sp3ctr3]: \"G00d luck tr4ck1ng m3...\"", true);
+    printToTerminal("[0Sp3ctr3]: \"Tr4c3 m3? Try it.\"", true);
   } else if (option === "brute") {
     corruption++;
     playerHealth--;
     spectreAwareness += 2;
     moralScore--;
-    printToTerminal("[ERROR]: Spectre is counter-attacking!");
+    printToTerminal("[ERROR]: Spectre retaliates!");
   } else if (option === "ghost") {
     spectreAwareness--;
     moralScore++;
-    printToTerminal("[SYSTEM]: Ghost mode engaged. You’re off the grid... for now.");
+    printToTerminal("[SYSTEM]: Ghost mode engaged.");
     showDedKodeImage("dedkode_nod.png");
   }
 
@@ -56,11 +90,10 @@ function playerChoice(option) {
   triggerSpectreGlitch();
 }
 
-// 👻 SPECTRE GLITCH EFFECTS
 function triggerSpectreGlitch() {
   setTimeout(() => {
     if (Math.random() > 0.5) {
-      printToTerminal("[0Sp3ctr3]: \"D3dK0d3, y0u c4n't h1d3 f0r3v3r...\"", true);
+      printToTerminal("[0Sp3ctr3]: \"D3dK0d3, y0u c4n't h1d3...\"", true);
       document.body.style.backgroundColor = "red";
       document.body.classList.add("glitch");
       setTimeout(() => {
@@ -70,7 +103,7 @@ function triggerSpectreGlitch() {
       }, 1500);
     } else {
       showDedKodeImage("dedkode_smirk.png");
-      printToTerminal("[DedKode]: \"You’re getting better at this... but don't get cocky.\"");
+      printToTerminal(`[DedKode]: \"${randomLine("praise")}\"`);
       setTimeout(() => {
         printToTerminal("[SYSTEM]: Control Restored.");
         allowNextMove();
@@ -79,52 +112,66 @@ function triggerSpectreGlitch() {
   }, 2000);
 }
 
-// 🎲 RANDOM EVENT SYSTEM
 function triggerRandomEvent() {
-  let roll = Math.random();
-
-  if (roll > 0.6) {
+  const roll = Math.random();
+  if (roll > 0.7) {
     triggerRandomJumpScare();
-  } else if (roll > 0.3) {
-    showDedKodeImage("dedkode_warning.png");
-    printToTerminal("[DedKode]: \"Yo, be careful. You’re playing right into Spectre’s hands...\"");
-    setTimeout(() => { printToTerminal("[SYSTEM]: Control Restored."); allowNextMove(); }, 2000);
+  } else if (roll > 0.4) {
+    startPuzzle();
   } else {
-    showDedKodeImage("dedkode_glitch.png");
-    printToTerminal("[ERROR]: DedKode.exe has encountered an anomaly...");
-    setTimeout(() => { printToTerminal("[SYSTEM]: Control Restored."); allowNextMove(); }, 2000);
+    showDedKodeImage("dedkode_warning.png");
+    printToTerminal(`[DedKode]: \"${randomLine("eerie")}\"`);
+    setTimeout(() => {
+      printToTerminal("[SYSTEM]: Control Restored.");
+      allowNextMove();
+    }, 2000);
   }
 }
 
-// 🧠 PUZZLE EVENT (Called Manually or by Event)
+function maybeGlitchScreen() {
+  if (corruption >= 3) {
+    const term = document.getElementById("terminal");
+    const original = term.value;
+    term.value = original.replace(/[A-Za-z]/g, c => (Math.random() > 0.7 ? "█" : c));
+    setTimeout(() => (term.value = original), 1500);
+  }
+}
+
+function fakeCrashScreen() {
+  printToTerminal("[ERROR]: System integrity breached. FATAL EXCEPTION.");
+  document.body.innerHTML = `
+    <div style="background:black;color:red;text-align:center;padding:5em;font-family:monospace;">
+      <h1>[CRITICAL ERROR] DEDKODE.EXE FAILURE</h1>
+      <p>Fatal system overflow. Memory dump initiated...</p>
+    </div>`;
+  setTimeout(() => {
+    alert("...kidding.");
+    restartGame();
+  }, 4000);
+}
+
 function startPuzzle() {
   puzzleStage++;
-  printToTerminal("[CHALLENGE]: Input the hidden Spectre code.");
-  let input = prompt("Enter Code:");
-  if (input?.toUpperCase() === "NEXUS") {
-    printToTerminal("[SYSTEM]: Override accepted. Access granted.");
+  const challenges = [
+    { prompt: "Decode this: KHOOR", answer: "HELLO" },
+    { prompt: "Binary to text: 01001000 01001001", answer: "HI" },
+    { prompt: "Base64: V09SRA==", answer: "WORD" },
+  ];
+  const challenge = challenges[Math.floor(Math.random() * challenges.length)];
+  printToTerminal(`[CHALLENGE]: ${challenge.prompt}`);
+  let input = prompt("Enter Answer:");
+  if (!input) return;
+  if (input.toUpperCase() === challenge.answer) {
+    printToTerminal("[SYSTEM]: Challenge Passed.");
     moralScore++;
   } else {
-    printToTerminal("[ERROR]: Code invalid.", true);
+    printToTerminal(`[DedKode]: \"${randomLine("roast")}\"`, true);
     corruption++;
   }
   updateStats();
   allowNextMove();
 }
 
-// 🖼 SHOW DEDKODE IMAGE
-function showDedKodeImage(img) {
-  let frame = document.getElementById("dedKodeImage");
-  if (frame) {
-    frame.src = img;
-    frame.style.display = "block";
-    setTimeout(() => {
-      frame.style.display = "none";
-    }, 4000);
-  }
-}
-
-// 💀 JUMPSCARE
 function triggerRandomJumpScare() {
   let id = Math.floor(Math.random() * 3) + 1;
   let scare = document.getElementById(`jumpscare${id}`);
@@ -143,38 +190,78 @@ function triggerRandomJumpScare() {
   }
 }
 
-// 🏁 ENDGAME STATES
+function useItem(item) {
+  if (inventory[item] > 0) {
+    if (item === "backupFile") {
+      playerHealth = Math.min(5, playerHealth + 1);
+      printToTerminal("[SYSTEM]: Backup restored. +1 HP");
+    } else if (item === "firewallShield") {
+      printToTerminal("[SYSTEM]: Firewall active. Next hit blocked.");
+    } else if (item === "purgeCommand") {
+      corruption = 0;
+      playerHealth--;
+      printToTerminal("[SYSTEM]: Purged corruption. -1 HP");
+    }
+    inventory[item]--;
+    updateStats();
+  } else {
+    printToTerminal("[ERROR]: Item unavailable.");
+  }
+}
+
+function updateInventoryDisplay() {
+  const inv = document.getElementById("inventory");
+  if (inv) {
+    inv.innerHTML = `
+      <p><strong>Inventory</strong></p>
+      🔹 Backup File: ${inventory.backupFile} <button onclick="useItem('backupFile')">Use</button><br>
+      🔹 Firewall Shield: ${inventory.firewallShield} <button onclick="useItem('firewallShield')">Use</button><br>
+      🔹 Purge Command: ${inventory.purgeCommand} <button onclick="useItem('purgeCommand')">Use</button>
+    `;
+  }
+}
+
+function showDedKodeImage(img) {
+  let frame = document.getElementById("dedKodeImage");
+  if (frame) {
+    frame.src = img;
+    frame.style.display = "block";
+    setTimeout(() => {
+      frame.style.display = "none";
+    }, 4000);
+  }
+}
+
 function winGame(msg) {
   printToTerminal("[SYSTEM]: " + msg);
   document.body.innerHTML = `<h1 class='glitch'>YOU ESCAPED</h1><p>${msg}</p><button onclick='restartGame()'>TRY AGAIN</button>`;
 }
+
 function loseGame(msg) {
   printToTerminal("[ERROR]: " + msg);
   document.body.innerHTML = `<h1 class='glitch'>GAME OVER</h1><p>${msg}</p><button onclick='restartGame()'>TRY AGAIN</button>`;
 }
+
 function restartGame() { location.reload(); }
 
-// 🔁 RETURN CONTROL
 function allowNextMove() {
-  const choices = document.getElementById("choices");
-  choices.style.display = "block";
+  document.getElementById("choices").style.display = "block";
   document.querySelectorAll("#choices button").forEach(btn => btn.disabled = false);
 }
 
-// 🚀 INIT GAME
 function startGame() {
   playerHealth = 5;
   corruption = 0;
   spectreAwareness = 0;
   moralScore = 0;
   puzzleStage = 0;
+  unlockedOblivion = false;
   updateStats();
-  printToTerminal("[DedKode]: \"Yo, you hearing this static? Some ass hat's listening...\"");
+  printToTerminal("[DedKode]: \"Yo, static’s getting louder. Someone’s tapping in.\"");
   document.getElementById("startButton").style.display = "none";
   document.getElementById("choices").style.display = "block";
 }
 
-// 🎮 HOOK BUTTONS
 document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("startButton")?.addEventListener("click", startGame);
   document.getElementById("traceBtn")?.addEventListener("click", () => playerChoice("trace"));
