@@ -5,7 +5,7 @@ let playerHealth = 5;
 let corruption = 0;
 let spectreAwareness = 0;
 let puzzleStage = 0;
-moralScore = 0;
+let moralScore = 0;
 let inventory = { backupFile: 1, firewallShield: 1, purgeCommand: 1 };
 let unlockedOblivion = false;
 
