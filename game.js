@@ -292,8 +292,13 @@ function startGame() {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-  document.getElementById("startButton")?.addEventListener("click", startGame);
-  document.getElementById("traceBtn")?.addEventListener("click", () => playerChoice("trace"));
-  document.getElementById("bruteBtn")?.addEventListener("click", () => playerChoice("brute"));
-  document.getElementById("ghostBtn")?.addEventListener("click", () => playerChoice("ghost"));
+  const startBtn = document.getElementById("startButton");
+  const traceBtn = document.getElementById("traceBtn");
+  const bruteBtn = document.getElementById("bruteBtn");
+  const ghostBtn = document.getElementById("ghostBtn");
+
+  if (startBtn) startBtn.addEventListener("click", startGame);
+  if (traceBtn) traceBtn.addEventListener("click", () => playerChoice("trace"));
+  if (bruteBtn) bruteBtn.addEventListener("click", () => playerChoice("brute"));
+  if (ghostBtn) ghostBtn.addEventListener("click", () => playerChoice("ghost"));
 });
