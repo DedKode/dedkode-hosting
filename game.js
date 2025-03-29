@@ -192,23 +192,6 @@ function startPuzzle() {
 
   updateStats();
   allowNextMove();
-},
-    { prompt: "Binary to text: 01001000 01001001", answer: "HI" },
-    { prompt: "Base64: V09SRA==", answer: "WORD" },
-  ];
-  const challenge = challenges[Math.floor(Math.random() * challenges.length)];
-  printToTerminal(`[CHALLENGE]: ${challenge.prompt}`);
-  let input = prompt("Enter Answer:");
-  if (!input) return;
-  if (input.toUpperCase() === challenge.answer) {
-    printToTerminal("[SYSTEM]: Challenge Passed.");
-    moralScore++;
-  } else {
-    printToTerminal(`[DedKode]: \"${randomLine("roast")}\"`, true);
-    corruption++;
-  }
-  updateStats();
-  allowNextMove();
 }
 
 function triggerRandomJumpScare() {
@@ -270,7 +253,9 @@ function loseGame(msg) {
   document.body.innerHTML = `<h1 class='glitch'>GAME OVER</h1><p>${msg}</p><button onclick='restartGame()'>TRY AGAIN</button>`;
 }
 
-function restartGame() { location.reload(); }
+function restartGame() {
+  location.reload();
+}
 
 function allowNextMove() {
   document.getElementById("choices").style.display = "block";
