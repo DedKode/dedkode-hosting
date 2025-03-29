@@ -83,7 +83,7 @@ function playerChoice(option) {
     spectreAwareness--;
     moralScore++;
     printToTerminal("[SYSTEM]: Ghost mode engaged.");
-    showDedKodeImage("dedkode_nod.png");
+    showDedKodeImage("dedkode_nod.png", false);
   }
 
   updateStats();
@@ -102,7 +102,7 @@ function triggerSpectreGlitch() {
         triggerRandomEvent();
       }, 1500);
     } else {
-      showDedKodeImage("dedkode_smirk.png");
+      showDedKodeImage("dedkode_smirk.png", true);
       printToTerminal(`[DedKode]: \"${randomLine("praise")}\"`);
       setTimeout(() => {
         printToTerminal("[SYSTEM]: Control Restored.");
@@ -112,6 +112,21 @@ function triggerSpectreGlitch() {
   }, 2000);
 }
 
+function showDedKodeImage(img, center = false) {
+  let frame = document.getElementById("dedKodeImage");
+  if (frame) {
+    frame.src = img;
+    frame.style.display = "block";
+    frame.style.width = center ? "40vw" : "20vw";
+    frame.style.top = center ? "50%" : "10%";
+    frame.style.left = center ? "50%" : "80%";
+    frame.style.transform = center ? "translate(-50%, -50%)" : "none";
+    setTimeout(() => {
+      frame.style.display = "none";
+    }, 4000);
+  }
+}
+
 function triggerRandomEvent() {
   const roll = Math.random();
   if (roll > 0.7) {
@@ -119,7 +134,7 @@ function triggerRandomEvent() {
   } else if (roll > 0.4) {
     startPuzzle();
   } else {
-    showDedKodeImage("dedkode_warning.png");
+    showDedKodeImage("dedkode_warning.png", true);
     printToTerminal(`[DedKode]: \"${randomLine("eerie")}\"`);
     setTimeout(() => {
       printToTerminal("[SYSTEM]: Control Restored.");
@@ -221,17 +236,6 @@ function updateInventoryDisplay() {
   }
 }
 
-function showDedKodeImage(img) {
-  let frame = document.getElementById("dedKodeImage");
-  if (frame) {
-    frame.src = img;
-    frame.style.display = "block";
-    setTimeout(() => {
-      frame.style.display = "none";
-    }, 4000);
-  }
-}
-
 function winGame(msg) {
   printToTerminal("[SYSTEM]: " + msg);
   document.body.innerHTML = `<h1 class='glitch'>YOU ESCAPED</h1><p>${msg}</p><button onclick='restartGame()'>TRY AGAIN</button>`;
@@ -257,6 +261,7 @@ function startGame() {
   puzzleStage = 0;
   unlockedOblivion = false;
   updateStats();
+  document.getElementById("instructions")?.remove();
   printToTerminal("[DedKode]: \"Yo, static’s getting louder. Someone’s tapping in.\"");
   document.getElementById("startButton").style.display = "none";
   document.getElementById("choices").style.display = "block";
