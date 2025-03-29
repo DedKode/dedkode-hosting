@@ -175,6 +175,30 @@ function startPuzzle() {
   const challenge = challenges[Math.floor(Math.random() * challenges.length)];
   printToTerminal(`[CHALLENGE]: ${challenge.prompt}`);
   let input = prompt("Enter Answer:");
+
+  if (input === null || input.trim() === "") {
+    printToTerminal("[ERROR]: No input received. Puzzle skipped.", true);
+    allowNextMove();
+    return;
+  }
+
+  if (input.toUpperCase().trim() === challenge.answer) {
+    printToTerminal("[SYSTEM]: Challenge Passed.");
+    moralScore++;
+  } else {
+    printToTerminal(`[DedKode]: \"${randomLine("roast")}\"`, true);
+    corruption++;
+  }
+
+  updateStats();
+  allowNextMove();
+},
+    { prompt: "Binary to text: 01001000 01001001", answer: "HI" },
+    { prompt: "Base64: V09SRA==", answer: "WORD" },
+  ];
+  const challenge = challenges[Math.floor(Math.random() * challenges.length)];
+  printToTerminal(`[CHALLENGE]: ${challenge.prompt}`);
+  let input = prompt("Enter Answer:");
   if (!input) return;
   if (input.toUpperCase() === challenge.answer) {
     printToTerminal("[SYSTEM]: Challenge Passed.");
