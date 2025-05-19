@@ -26,7 +26,7 @@ jobs:
         run: ./gradlew assembleRelease
 
       - name: Upload APK
-        uses: actions/upload-artifact@v3@ef4f8f2b0fbbcb1c35a5f86968050b0a54f4c260
+        uses: actions/upload-artifact@ef4f8f2b0fbbcb1c35a5f86968050b0a54f4c260
         with:
           name: DedKode-Game
           path: app/build/outputs/apk/release/app-release.apk
