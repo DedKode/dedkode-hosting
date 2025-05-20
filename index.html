@@ -4,6 +4,18 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>DedKode: Kill Chain</title>
+
+  <!-- 🧠 PWA Config -->
+  <meta name="theme-color" content="#00ff00">
+  <link rel="manifest" href="manifest.webmanifest">
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/service-worker.js')
+        .then(() => console.log('✅ Service Worker registered.'))
+        .catch(err => console.error('❌ Service Worker failed:', err));
+    }
+  </script>
+
   <style>
     body {
       background-color: black;
@@ -63,7 +75,6 @@
     Health: <span id="health">5</span> | Corruption: <span id="corruption">0</span>
   </p>
 
-  <!-- 🧠 Instructions (Fades on game start) -->
   <div id="instructions">
     <p><strong>INSTRUCTIONS:</strong></p>
     <ul style="text-align: left; display: inline-block; font-size: 14px;">
@@ -75,10 +86,8 @@
     </ul>
   </div>
 
-  <!-- 💻 Terminal -->
   <textarea id="terminal" readonly></textarea>
 
-  <!-- 🎮 Game Buttons -->
   <br />
   <button id="startButton">Start Game</button>
   <div id="choices" style="display:none;">
@@ -87,16 +96,13 @@
     <button id="ghostBtn">Go Ghost Mode</button>
   </div>
 
-  <!-- 🎒 Inventory -->
   <div id="inventory"></div>
 
-  <!-- 🧑‍💻 DedKode Visual -->
   <img id="dedKodeImage" src="" alt="DedKode"
        style="display:none; position:fixed; top:10%; left:80%;
        width: 20vw; height:auto;
        z-index:9998; border:2px solid lime; filter:drop-shadow(0 0 10px lime);">
 
-  <!-- 💀 Jumpscares -->
   <div class="jumpscare" id="jumpscare1">
     <img src="jumpscare.png" alt="Scary face" />
     <audio id="jumpscareSound1" src="jumpscare.mp3"></audio>
@@ -110,7 +116,6 @@
     <audio id="jumpscareSound3" src="jumpsound3.mp3"></audio>
   </div>
 
-  <!-- 🧠 Game Logic -->
   <script src="game.js"></script>
 </body>
 </html>
